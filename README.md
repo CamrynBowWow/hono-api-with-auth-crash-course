@@ -15,3 +15,5 @@ open http://localhost:3000
 - Hono
 - Zod
 - Node.js
+- drizzle
+- postgres

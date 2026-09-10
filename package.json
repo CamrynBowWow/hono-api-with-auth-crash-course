@@ -9,11 +9,16 @@
   "dependencies": {
     "@hono/node-server": "^2.1.1",
     "@hono/standard-validator": "^0.4.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.13.7",
+    "pg": "^8.23.0",
     "zod": "^4.6.1"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^1.0.0-rc.4",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }

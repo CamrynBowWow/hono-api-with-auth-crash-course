@@ -4,6 +4,7 @@ import z from 'zod';
 import { db } from '../db/db.ts';
 import { AuthorTable } from '../db/schema.ts';
 import { eq } from 'drizzle-orm';
+import { apiKeyAuth, type ApiKeyEnv } from '../middleware/auth.ts';
 
 const app = new Hono();
 
@@ -36,7 +37,10 @@ app.get('/:id', async (c) => {
 	return c.json(author);
 });
 
-app.post('/', sValidator('json', createAuthorSchema), async (c) => {
+const protectedApp = new Hono<ApiKeyEnv>();
+protectedApp.use(apiKeyAuth);
+
+protectedApp.post('/', sValidator('json', createAuthorSchema), async (c) => {
 	const data = c.req.valid('json');
 
 	const [author] = await db.insert(AuthorTable).values(data).returning();
@@ -44,7 +48,7 @@ app.post('/', sValidator('json', createAuthorSchema), async (c) => {
 	return c.json(author, 201);
 });
 
-app.put('/:id', sValidator('json', updateAuthorSchema), async (c) => {
+protectedApp.put('/:id', sValidator('json', updateAuthorSchema), async (c) => {
 	const id = c.req.param('id');
 	const data = c.req.valid('json');
 
@@ -57,12 +61,14 @@ app.put('/:id', sValidator('json', updateAuthorSchema), async (c) => {
 	return c.json(author);
 });
 
-app.delete('/:id', async (c) => {
+protectedApp.delete('/:id', async (c) => {
 	const id = c.req.param('id');
 
 	await db.delete(AuthorTable).where(eq(AuthorTable.id, id));
 
 	return c.body(null, 204);
 });
+
+app.route('/', protectedApp);
 
 export default app;

@@ -3,12 +3,14 @@ import { Hono } from 'hono';
 import authorRoutes from './routes/author.ts';
 import authRoutes from './routes/auth.ts';
 import apiKeyRoutes from './routes/apiKey.ts';
+import bookRoutes from './routes/book.ts';
 import { env } from './data/env.ts';
 
 const app = new Hono();
 
 app.route('/authors', authorRoutes);
 app.route('/auth', authRoutes);
+app.route('/book', bookRoutes);
 app.route('/api-keys', apiKeyRoutes);
 
 serve(
